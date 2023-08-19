@@ -31,7 +31,7 @@ export default function Home() {
       setIsMenuOpen(!isMenuOpen)
     }
 async function getPosts() {
-    axios.get('http://localhost:3000/api/courses')
+    axios.get('api/courses')
     .then(response => {
       // Assuming your API response contains the course data
       const courses = response.data;
@@ -45,7 +45,7 @@ async function getPosts() {
 
 async function getUser() {
 
-    const res = await fetch('http://localhost:3000/api/auth/profile', {
+    const res = await fetch('api/auth/profile', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ async function getUser() {
 
 async function logout() {
 
-    const res = await fetch('http://localhost:3000/api/auth/logout', {
+    const res = await fetch('api/auth/logout', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
