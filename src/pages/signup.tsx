@@ -3,12 +3,14 @@ import Link from "next/link"
 import { useState, useEffect } from "react";
 import { user } from "../../atoms/user";
 import {useRecoilState} from 'recoil';
+import { userState } from "../../interfaces/User";
 
 export default function Signup() {
 
     const [name, setName] = useState(''); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isAdmin, setisAdmin] = useState(false);
     const [userState, setUserState] = useRecoilState(user);
 
 
@@ -20,17 +22,19 @@ export default function Signup() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name,email,password
+                name, email, password, isAdmin
             }),
         })
         const data = await res.json()
 
         if(data?.status == 'ok' && data?.user && data?.token){
 
-            const userState = {
+            const userState: userState = {
                 isAuth: true,
+                isAdmin: data?.user?.isAdmin,
                 user : data?.user
             }
+            console.log(userState)
 
             setUserState(userState);
   
@@ -70,7 +74,7 @@ export default function Signup() {
                 <label htmlFor="name" className="text-base font-medium text-gray-900">
                     {' '}
                     Full Name{' '}
-                </label>
+                </label>    
                 <div className="mt-2">
                     <input
                     className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
@@ -115,6 +119,20 @@ export default function Signup() {
                     onChange={(e) => setPassword(e.target.value)}
                     ></input>
                 </div>
+                </div>
+                {/* making a dropdown to select admin or non admin user*/}
+                <div>
+                <label htmlFor="admin" className="text-base font-medium text-gray-900">
+                    {' '}
+                    Admin{' '}
+                </label>
+                <div className="mt-2">
+                    <select value={isAdmin.toString()} onChange={(e)=>{setisAdmin(e.target.value==='true')}}>
+                        <option value="true">Admin</option>
+                        <option defaultChecked value="false">Non-Admin</option>
+                    </select>
+                </div>
+
                 </div>
                 <div>
                 <button

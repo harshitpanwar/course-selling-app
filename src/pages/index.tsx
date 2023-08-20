@@ -45,7 +45,9 @@ async function getPosts() {
 
 async function getUser() {
 
-    const res = await fetch('api/auth/profile', {
+    const url = 'api/auth/profile';
+
+    const res = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -57,6 +59,7 @@ async function getUser() {
     if(data?.status == 'ok' && data?.user){
         const userState = {
             isAuth: true,
+            isAdmin: data?.user?.isAdmin,
             user : data?.user
         }
         setUserState(userState);
@@ -102,16 +105,21 @@ async function logout() {
   return (
     <div className="bg-white">
 
-    {userState.isAuth ?
-    <div className="bg-black text-white text-center py-2">
-        Logged in as {userState?.user?.name} 
-    </div>:
-    <div className="bg-black text-white text-center py-2">
-        Not Logged in
-    </div>
+    {
+    userState.isAuth ?
+      userState.isAdmin?
+      <div className="bg-black text-white text-center py-2">
+      Admin {userState?.user?.name} 
+      </div>:
+      <div className="bg-black text-white text-center py-2">
+          Logged in as {userState?.user?.name} 
+      </div>:
+      <div className="bg-black text-white text-center py-2">
+          Not Logged in
+      </div>
 
-    
     }
+
     <div className="relative w-full bg-white">
     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <b>Course Selling Platform</b>
@@ -131,7 +139,10 @@ async function logout() {
             </li>
           ))}
         </ul>
+
+       
       </div>
+
       <div className="hidden space-x-2 lg:block">
 
         {!userState.isAuth ?
@@ -156,13 +167,29 @@ async function logout() {
             </button>
 
         </div>
-        :<button
-        type="button"
-        className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-        onClick={logout}
-        >
-            Logout
-        </button>
+        :
+        <div>
+        {
+        userState.isAdmin &&
+
+          <Link href="/createCourse" className="font-semibold text-black transition-all duration-200 hover:underline">
+            <button
+            type="button"
+            className="rounded-md bg-transparent px-3 py-2 text-sm font-semibold text-black hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            >
+                Create Course
+            </button>
+          </Link>
+        }
+          <button
+          type="button"
+          className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          onClick={logout}
+          >
+              Logout
+          </button>
+        </div>
+       
         }
       </div>
       <div className="lg:hidden">
@@ -226,13 +253,29 @@ async function logout() {
                     </Link>
                     </button>
                 </div>
-                :<button
-                type="button"
-                className="w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                onClick={logout}
-                >
-                Log Out
-                </button>
+                :
+                <div>
+                  {
+                  userState.isAdmin &&
+
+                  <Link href="/createCourse" className="font-semibold text-black transition-all duration-200 hover:underline">
+                  <button
+                  type="button"
+                  className="w-full rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  >
+                  Create Course
+                  </button>
+                  </Link>
+                  } 
+                  <button
+                  type="button"
+                  className="w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  onClick={logout}
+                  >
+                  Log Out
+                  </button>
+
+                </div>
             }
               </div>
             </div>

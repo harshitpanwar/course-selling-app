@@ -4,6 +4,7 @@ import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import { UserWithoutPassword } from '../../../../interfaces/User';
+import { setCookie } from 'cookies-next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -34,14 +35,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             email: user.email,
         };
 
-        const secret: any = process.env.JWT_SECRET;
+        let secret: any;
+        let token: any;
 
-        const token = jwt.sign({_id: user.id}, secret);
-        
-        const options = {expires:new Date(Date.now()+90*24*60*60*1000),
-            httpOnly:true,};
+        console.log('here');
+        if(user.isAdmin){
+            secret = process.env.JWT_SECRET_ADMIN;
+            token = jwt.sign({_id: user.id, isAdmin: true}, secret);
+            userWithoutPassword.isAdmin = true;
+        }
+        else{
+            
+            secret = process.env.JWT_SECRET;
+            token = jwt.sign({_id: user.id}, secret);
+            userWithoutPassword.isAdmin = false;
+        }
 
-        res.setHeader('Set-Cookie', serialize('token', token, options));
+        setCookie('server-token', token, { req, res, maxAge: 90*24*60*60*1000 });
+
         return res.status(201).json({
             status: "ok",
             message: "Logged in successfully",

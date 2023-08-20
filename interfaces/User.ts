@@ -11,9 +11,11 @@ export interface UserWithoutPassword {
     id?: number;
     name: string;
     email: string;
+    isAdmin?: boolean;
 }
 
 export interface userState {
     isAuth: boolean;
+    isAdmin?: boolean;
     user?: User | null;
 }

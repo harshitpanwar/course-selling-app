@@ -32,10 +32,14 @@ export default function Login() {
 
             const userState: userState = {
                 isAuth: true,
+                isAdmin: data?.user?.isAdmin,
                 user : data?.user
             }
 
+            console.log(userState);
+
             setUserState(userState);
+
           //set message in message tag
             const message: any = document.querySelector('.message');
             message.innerHTML = data?.message;
