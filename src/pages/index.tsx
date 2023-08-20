@@ -163,7 +163,7 @@ const makePayment = async (user: User, course: Course) => {
         razorpayOrderId: response.razorpay_order_id,
         message: result.data.msg,
         course: JSON.stringify(course)
-      }
+      };
 
       console.log("props", props);
 

@@ -9,16 +9,13 @@ interface MyPageProps {
     course: Course;
   }
   
-const OrderConfirmation: React.FC<MyPageProps> = () => {
+const OrderConfirmation = () => {
 
     const router = useRouter();
     let {course, razorpayPaymentId, razorpayOrderId, message}:any = router.query;
+    if(course)
     course = JSON.parse(course);
 
-
-    useEffect(()=> {
-        console.log(course);
-    }, [])
     return  (
         <div className="mx-auto my-4 max-w-6xl px-2 md:my-6 md:px-0">
           <h2 className="text-3xl font-bold">Order Details</h2>
@@ -32,7 +29,7 @@ const OrderConfirmation: React.FC<MyPageProps> = () => {
                   {[
                     ['razorpayPaymentId', razorpayPaymentId],
                     ['razorpayOrderId', razorpayOrderId],
-                    ['Total Amount', `₹ ${course?.price}`],
+                    ['Total Amount', ` ${course?.price}`],
                     ['Order Status', message],
                   ].map(([key, value]) => (
                     <div key={key} className="mb-4">
@@ -58,7 +55,6 @@ const OrderConfirmation: React.FC<MyPageProps> = () => {
                             alt={course?.image}
                           />
                         </div>
-    
                         <div className="ml-5 flex flex-col justify-between">
                           <div className="flex-1">
                             <p className="text-sm font-bold text-gray-900">{course?.title}</p>
@@ -70,7 +66,7 @@ const OrderConfirmation: React.FC<MyPageProps> = () => {
                       </div>
     
                       <div className="ml-auto flex flex-col items-end justify-between">
-                        <p className="text-right text-sm font-bold text-gray-900">₹ {course?.price}</p>
+                        <p className="text-right text-sm font-bold text-gray-900"> {course?.price}</p>
                       </div>
                     </li>
                 </ul>
