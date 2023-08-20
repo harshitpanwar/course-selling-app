@@ -8,6 +8,9 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { allCourseList } from "../../selectors/courses";
 import { loggedInUser } from "../../selectors/user";
 import Link from "next/link";
+import { User, userState } from "../../interfaces/User";
+import { Course } from "../../interfaces/Course";
+import { useRouter } from 'next/router';
 
 
 export default function Home() {
@@ -21,15 +24,33 @@ export default function Home() {
           href: '#',
         }
       ]
+    const router = useRouter();
+
     const courses = useRecoilValue(allCourseList);
     const [courseList, setCourseList] = useRecoilState(courseListState);
     const userStatus = useRecoilValue(loggedInUser);
     const [userState, setUserState] = useRecoilState(user);
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+    const userInfo = userStatus.user;
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen)
     }
+async function initiatePayment(course: Course) {
+
+
+  if(!userInfo || !userInfo?.id || !userInfo?.name || !userInfo?.email){
+    alert('Please login to buy a course');
+    return;
+  }
+
+  if(!course || !course?.id ){
+    alert('Something went wrong');
+    return;
+  }
+
+  makePayment(userInfo, course);
+
+}
 async function getPosts() {
     axios.get('api/courses')
     .then(response => {
@@ -93,6 +114,95 @@ async function logout() {
     }
     
 }
+
+
+const makePayment = async (user: User, course: Course) => {
+  const res = await initializeRazorpay();
+
+  if (!res) {
+    alert("Razorpay SDK Failed to load");
+    return;
+  }
+
+  // Make API call to the serverless API
+  const course_id = course.id;
+  const user_id = user.id;
+  const apiData = await fetch("/api/payments/razorpay",
+    {
+    body: JSON.stringify({course_id, user_id}),
+    headers: { "Content-Type": "application/json" },
+    method: "POST"
+    },
+    ).then((t) =>
+    t.json()
+  );
+  console.log(apiData);
+  var options = {
+    key: process.env.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+    name: "Manu Arora Pvt Ltd",
+    currency: apiData.currency,
+    amount: apiData.amount,
+    order_id: apiData.id,
+    description: "Thankyou for your test donation",
+    image: "https://manuarora.in/logo.png",
+    handler: async function (response:any) {
+      // Validate payment at server - using webhooks is a better idea.
+      console.log(response);
+      const data = {
+        orderCreationId: apiData.id,
+        razorpayPaymentId: response.razorpay_payment_id,
+        razorpayOrderId: response.razorpay_order_id,
+        razorpaySignature: response.razorpay_signature,
+      };
+
+      const result = await axios.post('/api/payments/verifySignature', data);
+
+      
+      const props: any = {
+        razorpayPaymentId: response.razorpay_payment_id,
+        razorpayOrderId: response.razorpay_order_id,
+        message: result.data.msg,
+        course: JSON.stringify(course)
+      }
+
+      console.log("props", props);
+
+      router.push({
+        pathname: '/orderconfirmation',
+        query: props
+      })
+
+      // alert(response.razorpay_payment_id);
+      // alert(response.razorpay_order_id);
+      // alert(response.razorpay_signature);
+    },
+    prefill: {
+      name: apiData.name,
+      email: apiData.email,
+      contact: "9999999999",
+    },
+  };
+
+  const paymentObject = new (window as any).Razorpay(options);
+  paymentObject.open();
+};
+
+const initializeRazorpay = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+
+    document.body.appendChild(script);
+  });
+};
+
 
   useEffect(() => {
     // Fetch data from your API
@@ -305,7 +415,9 @@ async function logout() {
             <p className="mt-2 text-sm text-gray-300">
               Price ₹ {course.price}
             </p>
-            <button className="mt-2 inline-flex cursor-pointer items-center text-sm font-semibold text-white">
+            <button className="mt-2 inline-flex cursor-pointer items-center text-sm font-semibold text-white"
+            onClick={(e)=> {e.preventDefault(); initiatePayment(course)}}
+            >
               Buy Now &rarr;
             </button>
           </div>
