@@ -292,7 +292,7 @@ async function logout() {
           className="relative aspect-[16/9]  w-auto rounded-md md:aspect-auto md:h-[400px]"
         >
           <img
-            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kindpng.com%2Fpicc%2Fm%2F585-5856121_course-hd-png-download.png&f=1&nofb=1&ipt=5050961c92d0fe1131831ab13d7c2c6c7ebb43ee1811ca1c5cce7747858dfbc9&ipo=images"
+            src={course.image}
             alt="AirMax Pro"
             className="z-0 h-full w-full rounded-md object-cover"
           />
@@ -301,6 +301,9 @@ async function logout() {
             <h1 className="text-lg font-semibold text-white">{course.title}</h1>
             <p className="mt-2 text-sm text-gray-300">
               {course.description}
+            </p>
+            <p className="mt-2 text-sm text-gray-300">
+              Price ₹ {course.price}
             </p>
             <button className="mt-2 inline-flex cursor-pointer items-center text-sm font-semibold text-white">
               Buy Now &rarr;

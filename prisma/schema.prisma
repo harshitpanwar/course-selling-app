@@ -14,6 +14,8 @@ model Course {
   id Int @id @default(autoincrement())
   title String
   description String   
+  image String @default("https://www.kindpng.com/picc/m/585-5856121_course-hd-png-download.png")
+  price Float @default(10.0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
