@@ -29,7 +29,7 @@ const OrderConfirmation = () => {
                   {[
                     ['razorpayPaymentId', razorpayPaymentId],
                     ['razorpayOrderId', razorpayOrderId],
-                    ['Total Amount', ` ${course?.price}`],
+                    ['Total Amount', `₹ ${course?.price}`],
                     ['Order Status', message],
                   ].map(([key, value]) => (
                     <div key={key} className="mb-4">
@@ -66,7 +66,7 @@ const OrderConfirmation = () => {
                       </div>
     
                       <div className="ml-auto flex flex-col items-end justify-between">
-                        <p className="text-right text-sm font-bold text-gray-900"> {course?.price}</p>
+                        <p className="text-right text-sm font-bold text-gray-900">₹ {course?.price}</p>
                       </div>
                     </li>
                 </ul>
