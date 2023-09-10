@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from 'axios';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
+import { Menu, X, ChevronDown, ChevronRight, Loader } from 'lucide-react'
 
 import { courseListState } from "../../atoms/courses";
 import { user } from "../../atoms/user";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { User, userState } from "../../interfaces/User";
 import { Course } from "../../interfaces/Course";
 import { useRouter } from 'next/router';
-
+import {Dna} from "react-loader-spinner"
 
 export default function Home() {
     const menuItems = [
@@ -30,21 +30,25 @@ export default function Home() {
     const [courseList, setCourseList] = useRecoilState(courseListState);
     const userStatus = useRecoilValue(loggedInUser);
     const [userState, setUserState] = useRecoilState(user);
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const userInfo = userStatus.user;
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen)
     }
 async function initiatePayment(course: Course) {
 
+  setLoading(true);
 
   if(!userInfo || !userInfo?.id || !userInfo?.name || !userInfo?.email){
     alert('Please login to buy a course');
+    setLoading(false);
     return;
   }
 
   if(!course || !course?.id ){
     alert('Something went wrong');
+    setLoading(false);
     return;
   }
 
@@ -117,6 +121,7 @@ async function logout() {
 
 
 const makePayment = async (user: User, course: Course) => {
+
   const res = await initializeRazorpay();
 
   if (!res) {
@@ -185,6 +190,7 @@ const makePayment = async (user: User, course: Course) => {
 
   const paymentObject = new (window as any).Razorpay(options);
   paymentObject.open();
+  setLoading(false);
 };
 
 const initializeRazorpay = () => {
@@ -214,6 +220,15 @@ const initializeRazorpay = () => {
 
   return (
     <div className="bg-white">
+
+    {loading && <Dna
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: "1000", backgroundColor: "tranparent"  }}
+            wrapperClass="dna-wrapper"
+        />}
 
     {
     userState.isAuth ?
@@ -396,7 +411,18 @@ const initializeRazorpay = () => {
   </div>
 
     <div className="mx-auto grid w-full max-w-7xl items-center space-y-4 px-2 py-10 md:grid-cols-2 md:gap-6 md:space-y-0 lg:grid-cols-4">
-      {courseList.map((course) => (
+      {
+      courseList.length==0?
+      <Dna
+        visible={true}
+        height="80"
+        width="80"
+        ariaLabel="dna-loading"
+        wrapperStyle={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+        wrapperClass="dna-wrapper"
+      />
+      :
+      courseList.map((course) => (
         <div
           key={course.id}
           className="relative aspect-[16/9]  w-auto rounded-md md:aspect-auto md:h-[400px]"

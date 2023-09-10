@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { user } from "../../atoms/user";
 import {useRecoilState} from 'recoil';
 import { userState } from "../../interfaces/User";
+import { Dna } from "react-loader-spinner";
 
 export default function Signup() {
 
@@ -12,10 +13,12 @@ export default function Signup() {
     const [password, setPassword] = useState('');
     const [isAdmin, setisAdmin] = useState(false);
     const [userState, setUserState] = useRecoilState(user);
+    const [loading, setLoading] = useState(false);
 
 
     async function signup(){
 
+        setLoading(true);
         const res = await fetch('api/auth/signup', {
             method: 'POST',
             headers: {
@@ -43,7 +46,7 @@ export default function Signup() {
         //set message in message tag
         const message: any = document.querySelector('.message');
         message.innerHTML = data?.message;
-
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -59,6 +62,15 @@ export default function Signup() {
     return (
        
         <div className="flex items-center justify-center bg-white px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+
+        {loading && <Dna
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'  }}
+            wrapperClass="dna-wrapper"
+        />}
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
 
             <h2 className="text-2xl font-bold leading-tight text-black">Sign up to create account</h2>

@@ -4,17 +4,19 @@ import { user } from "../../atoms/user";
 import {useRecoilState} from 'recoil';
 import { userState } from "../../interfaces/User";
 import { useRouter } from 'next/router';
+import {Dna} from "react-loader-spinner"
 
 export default function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userState, setUserState] = useRecoilState(user);
+    const [loading, setLoading] = useState(false);
     // const router = useRouter();
 
     async function Login() {
 
-
+        setLoading(true);
         console.log(email,password)
 
         const res = await fetch('api/auth/login', {
@@ -43,9 +45,15 @@ export default function Login() {
           //set message in message tag
             const message: any = document.querySelector('.message');
             message.innerHTML = data?.message;
+            setLoading(false);
             window.location.href = '/';
 
         }
+
+        const message: any = document.querySelector('.message');
+        message.innerHTML = data?.message;
+
+        setLoading(false);
 
 
     }
@@ -58,6 +66,16 @@ export default function Login() {
 
     return (
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+
+        {loading && <Dna
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="dna-loading"
+                    wrapperStyle={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'  }}
+                    wrapperClass="dna-wrapper"
+                />}
+                
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             <h2 className="text-center text-2xl font-bold leading-tight text-black">
             Sign in to your account
