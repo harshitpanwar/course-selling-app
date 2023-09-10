@@ -13,7 +13,6 @@ export default function CreateCourse() {
     const [title , setTitle] = useState('');
     const [description , setDescription] = useState('');
     const [price , setPrice] = useState('');
-    const [image , setImage] = useState(null);
     const [courseList, setCourseList] = useRecoilState(courseListState);
     const [loading, setLoading] = useState(false);
 
@@ -25,7 +24,7 @@ export default function CreateCourse() {
 
         setLoading(true);
 
-        if(!price || !description || !title || !image){
+        if(!price || !description || !title){
             alert('Please fill all fields');
             setLoading(false);
             return;
@@ -61,7 +60,6 @@ export default function CreateCourse() {
             setTitle('');
             setDescription('');
             setPrice('');
-            setImage(null);
 
         }
         //set message in message tag
@@ -165,10 +163,7 @@ export default function CreateCourse() {
                     type="file" 
                     name="file" 
                     id="file" 
-                    className='' 
-                    value={image} 
-                    onChange={(e)=> 
-                    setImage(e.target.value)}  />
+                    className=''/>
                 </div>
  
                 <div>
