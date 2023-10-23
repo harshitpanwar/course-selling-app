@@ -35,6 +35,12 @@
 ## Demo
 
 Check out the live demo of the project [here](https://course-selling-app-pink.vercel.app/).
+![image](https://github.com/harshitpanwar/course-selling-app/assets/54681032/0895c204-d82e-49cc-be1b-530def8d13cd)
+![image](https://github.com/harshitpanwar/course-selling-app/assets/54681032/0fc9e276-f5c4-4ce3-84e3-86e8a375d13c)
+![image](https://github.com/harshitpanwar/course-selling-app/assets/54681032/e537bc90-7c40-4b4a-943f-33e11830f28a)
+![image](https://github.com/harshitpanwar/course-selling-app/assets/54681032/3d93404d-1a75-432b-8d44-25cc0097e42c)
+![image](https://github.com/harshitpanwar/course-selling-app/assets/54681032/9eabd1c3-992e-4a6f-aeb6-0e788042bb1e)
+
 
 ### Admin Login
 
