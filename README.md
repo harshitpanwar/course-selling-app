@@ -9,9 +9,7 @@
 - [Demo](#demo)
 - [Prerequisites](#prerequisites)
 - [Configuration](#configuration)
-- [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -65,10 +63,6 @@ Make sure to configure the following environment variables in your `.env` file:
 - `AWS_S3_BUCKET`: Your AWS S3 bucket name.
 - `RAZORPAY_API_KEY`: Your Razorpay API key.
 
-## Usage
-
-Provide instructions on how to use your app here. Include details on how to create and manage courses, make payments, and any other relevant features.
-
 ## Contributing
 
 Contributions to this project are welcome. Please follow these steps to contribute:
@@ -78,7 +72,3 @@ Contributions to this project are welcome. Please follow these steps to contribu
 3. Make your changes and commit them: `git commit -m 'Add new feature'`.
 4. Push to the branch: `git push origin feature-name`.
 5. Open a pull request with a detailed description of the changes.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
